@@ -42,6 +42,12 @@ set_pvr_env() {
 }
 ROOTFS_POSTPROCESS_COMMAND += "set_pvr_env;"
 
+# weston comes in through IMAGE_INSTALL, not the "weston" IMAGE_FEATURE, so
+# rootfs-postcommands would leave default.target at multi-user and neither
+# weston.service nor opentina-kiosk.service (both WantedBy=graphical.target)
+# would start at boot.
+SYSTEMD_DEFAULT_TARGET = "graphical.target"
+
 export IMAGE_BASENAME = "opentina-image-hmi"
 
 IMAGE_ROOTFS_SIZE ?= "524288"
