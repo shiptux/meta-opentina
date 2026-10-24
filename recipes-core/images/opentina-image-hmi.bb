@@ -10,32 +10,23 @@ inherit opentina-default-users
 IMAGE_FEATURES += " \
     splash \
     package-management \
+    ssh-server-openssh \
     allow-root-login \
 "
 
 IMAGE_INSTALL += " \
     packagegroup-core-boot \
     packagegroup-core-tools-debug \
-    weston weston-init \
-    wayland \
-    xwayland \
-    mesa mesa-megadriver \
-    gstreamer1.0 \
-    gstreamer1.0-plugins-base \
-    gstreamer1.0-plugins-good gstreamer1.0-plugins-good-vpx \
-    gstreamer1.0-plugins-bad \
-    gstreamer1.0-libav \
-    pulseaudio pulseaudio-server alsa-utils \
-    fontconfig liberation-fonts \
-    libinput evtest powervr-firmware-a733 \
-    mesa-demos kmscube libdrm-tests wayland-utils \
-    vulkan-tools glmark2 weston-examples \
-    opentina-hmi-tools \
+    openssh-sftp-server \
+    packagegroup-opentina-graphics \
+    packagegroup-opentina-multimedia \
+    packagegroup-opentina-audio \
+    packagegroup-opentina-x11 \
+    packagegroup-opentina-tools \
+    packagegroup-opentina-net \
     ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd systemd-serialgetty', 'sysvinit sysvinit-inittab', d)} \
 "
 
-# The imagination driver is not Vulkan-conformant yet and refuses to load
-# without this opt-in.
 set_pvr_env() {
     printf '%s\n' 'PVR_I_WANT_A_BROKEN_VULKAN_DRIVER=1' \
         >> ${IMAGE_ROOTFS}${sysconfdir}/environment

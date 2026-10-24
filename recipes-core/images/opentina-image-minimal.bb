@@ -19,11 +19,7 @@ IMAGE_INSTALL += " \
     e2fsprogs \
     e2fsprogs-mke2fs \
     e2fsprogs-e2fsck \
-    iproute2 \
-    iputils \
-    ethtool \
-    wpa-supplicant \
-    iw \
+    packagegroup-opentina-net \
     bash \
     nano \
     procps \
