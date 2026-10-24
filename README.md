@@ -42,12 +42,25 @@ cd meta-opentina
 |--------|-------|-------------|
 | `opentina-minimal` | `opentina-image-minimal` | CLI rootfs (glibc, OpenSSH) |
 | `opentina-qt` | `opentina-image-qt` | Qt5 GUI (`yocto-init.sh --qt`) |
-| `opentina-hmi` | `opentina-image-hmi` | Wayland/Weston HMI, software-rendered (Mesa swrast/llvmpipe, GStreamer, PulseAudio, XWayland) |
+| `opentina-hmi` | `opentina-image-hmi` | Wayland/Weston HMI on the A733 GPU (Mesa imagination Vulkan + zink), GStreamer, PulseAudio, XWayland, OpenSSH |
 
-Build: `./opentina-build.sh hmi`. Software GL is forced via `/etc/environment`
-(`LIBGL_ALWAYS_SOFTWARE=1`) until an A733 GPU/DRM driver lands; Weston still
-needs a kernel KMS device (e.g. `CONFIG_DRM_SIMPLEDRM`). Chromium (Ozone/Wayland)
-is deferred — it needs meta-browser + meta-clang and a multi-hour build.
+Build: `./opentina-build.sh hmi`. The GPU path needs the kernel `powervr` module
+(BSP side) and the firmware from `powervr-firmware-a733`; the imagination
+driver still requires `PVR_I_WANT_A_BROKEN_VULKAN_DRIVER=1`, which the image
+sets for weston and in `/etc/environment`. Chromium is deferred: it needs
+meta-browser + meta-clang, and zink on this driver only exposes OpenGL ES 2.0.
+
+The HMI stack is split into package groups (`recipes-core/packagegroups/`) so
+other images or layers can pull one piece by name:
+
+| Package group | Content |
+|---------------|---------|
+| `packagegroup-opentina-graphics` | weston, weston-init, wayland, mesa, PowerVR firmware, fonts |
+| `packagegroup-opentina-multimedia` | GStreamer core, base/good/bad, vpx, libav |
+| `packagegroup-opentina-audio` | PulseAudio, ALSA utils |
+| `packagegroup-opentina-x11` | XWayland and X11 smoke clients (xdpyinfo, xhost, xauth, xev) |
+| `packagegroup-opentina-tools` | mesa-demos, kmscube, glmark2, vulkan-tools, weston-examples, `opentina-hmi-check` |
+| `packagegroup-opentina-net` | iproute2, iputils, ethtool, wpa-supplicant, iw (shared with minimal) |
 
 Default machine: **`a733-aiot`**
 
