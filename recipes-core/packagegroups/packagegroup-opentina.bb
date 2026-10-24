@@ -50,5 +50,5 @@ RDEPENDS:${PN}-tools = " \
 "
 
 RDEPENDS:${PN}-net = " \
-    iproute2 iputils ethtool wpa-supplicant iw \
+    iproute2 iproute2-ss iputils ethtool wpa-supplicant iw \
 "
