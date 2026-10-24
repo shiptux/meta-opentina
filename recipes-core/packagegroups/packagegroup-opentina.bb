@@ -17,11 +17,13 @@ PACKAGES = " \
 
 # Wayland compositor and Mesa with the imagination Vulkan driver (PowerVR
 # BXM-4-64) plus zink for GL; the kernel powervr module comes from the BSP.
+# Libraries (libinput, fontconfig) come in through weston; an allarch
+# packagegroup must not name debian-renamed library packages.
 RDEPENDS:${PN}-graphics = " \
     weston weston-init wayland \
     mesa mesa-megadriver \
     powervr-firmware-a733 \
-    libinput fontconfig liberation-fonts \
+    liberation-fonts \
 "
 
 RDEPENDS:${PN}-multimedia = " \
